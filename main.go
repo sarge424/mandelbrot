@@ -44,7 +44,14 @@ func main() {
 			}
 		}
 
-		arr := utils.Mandelbrot(-3, 1, 3, winWidth, winHeight, maxIters)
+		arr := utils.MakeSlice(winWidth, winHeight)
+
+		s := winHeight / 3
+		step := 4 / float64(winWidth) * float64(s)
+
+		utils.Mandelbrot(-3, 1, 4, arr[0:s], maxIters)
+		utils.Mandelbrot(-3, 1-step, 4, arr[s:2*s], maxIters)
+		utils.Mandelbrot(-3, 1-2*step, 4, arr[2*s:3*s], maxIters)
 
 		for i := 0; i < winHeight; i++ {
 			for j := 0; j < winWidth; j++ {

@@ -15,7 +15,7 @@ func itersToInfinity(c complex128, maxIters int) int {
 	return i
 }
 
-func makeSlice(w, h int) [][]int {
+func MakeSlice(w, h int) [][]int {
 	a := [][]int{}
 
 	for i := 0; i < h; i++ {
@@ -29,8 +29,8 @@ func makeSlice(w, h int) [][]int {
 	return a
 }
 
-func Mandelbrot(x, y, scale float64, w, h, iters int) [][]int {
-	arr := makeSlice(w, h)
+func Mandelbrot(x, y, scale float64, arr [][]int, iters int) {
+	w, h := len(arr[0]), len(arr)
 
 	var r, c int
 	step := scale / float64(w)
@@ -43,6 +43,4 @@ func Mandelbrot(x, y, scale float64, w, h, iters int) [][]int {
 		}
 		r++
 	}
-
-	return arr
 }
