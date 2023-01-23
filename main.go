@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"sarge424/mandelbrot/utils"
+	"sync"
 	"time"
 
 	"github.com/veandco/go-sdl2/sdl"
@@ -43,31 +44,34 @@ func main() {
 				return
 			}
 		}
+		t = time.Now()
 
 		arr := utils.MakeSlice(winWidth, winHeight)
 
-		s := winHeight / 3
-		step := 4 / float64(winWidth) * float64(s)
+		step := 4 / float64(winWidth)
 
-		utils.Mandelbrot(-3, 1, 4, arr[0:s], maxIters)
-		utils.Mandelbrot(-3, 1-step, 4, arr[s:2*s], maxIters)
-		utils.Mandelbrot(-3, 1-2*step, 4, arr[2*s:3*s], maxIters)
+		var beeper sync.WaitGroup
+		beeper.Add(winHeight)
+
+		for i := 0; i < winHeight; i++ {
+			go utils.Mandelbrot(-1, 0.3-step*float64(i), 3, arr[i:i+1], maxIters, &beeper)
+		}
+
+		beeper.Wait()
 
 		for i := 0; i < winHeight; i++ {
 			for j := 0; j < winWidth; j++ {
 				frac := 1 - float32(arr[i][j])/float32(maxIters)
 				c := 255 * frac
-
 				renderer.SetDrawColor(uint8(c*0.1), uint8(c*0.7), uint8(c*0.6), 255)
+
 				renderer.DrawPoint(int32(j), int32(i))
 			}
 		}
 
-		fmt.Println(time.Since(t))
-		t = time.Now()
-
 		renderer.Present()
-		sdl.Delay(16)
+		fmt.Println(time.Since(t))
+		//sdl.Delay(16)
 
 	}
 }

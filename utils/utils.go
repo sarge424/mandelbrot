@@ -1,5 +1,7 @@
 package utils
 
+import "sync"
+
 func mag2(c complex128) float64 {
 	return real(c)*real(c) + imag(c)*imag(c)
 }
@@ -29,7 +31,7 @@ func MakeSlice(w, h int) [][]int {
 	return a
 }
 
-func Mandelbrot(x, y, scale float64, arr [][]int, iters int) {
+func Mandelbrot(x, y, scale float64, arr [][]int, iters int, beeper *sync.WaitGroup) {
 	w, h := len(arr[0]), len(arr)
 
 	var r, c int
@@ -43,4 +45,6 @@ func Mandelbrot(x, y, scale float64, arr [][]int, iters int) {
 		}
 		r++
 	}
+
+	beeper.Done()
 }
